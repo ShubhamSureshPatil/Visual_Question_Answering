@@ -1,46 +1,13 @@
-[Visual Learning and Recognition (16-824) Spring 2019](https://sites.google.com/andrew.cmu.edu/16824-spring2019/)
-- Created By: [Sam Powers](https://www.ri.cmu.edu/ri-people/samantha-powers/), [Kenny Marino](http://kennethmarino.weebly.com/)
-- TAs: [Rohit Girdhar](http://rohitgirdhar.github.io), [Kenny Marino](http://kennethmarino.weebly.com/), [Senthil Purushwalkam](http://www.cs.cmu.edu/~spurushw/), [Chen-Hsuan Lin](https://chenhsuanlin.bitbucket.io/), [Sam Powers](https://www.ri.cmu.edu/ri-people/samantha-powers/), [Tao Chen](https://taochenshh.github.io/)
-- Please post questions, if any, on the piazza for HW3.
-- Total points: 100
-- Due Date: April 19
-- Submission Link: https://forms.gle/Kw8EMDkstXbzmv5j8
-
-In this assignment you will do three main things: 
-
-1. Load the VQA dataset [1]
-1. Implement Simple Baseline for Visual Question Answering [2]
-1. Implement Hierarchical Question-Image Co-Attention for Visual Question Answering [3]
-
-**This assignment is more open-ended than the previous assignments**. It will require 
-reading documentation, code, and may require making design decisions. Use your best judgment, and describe your thought 
-processes and any alternative designs considered. **We strongly advise starting early.**
-
-In all the following tasks, coding and analysis, please write a short summary of what you tried, what worked (or didn't), and what you learned, in the report. Write the code in the files as specified. 
-
-**Submission Requirements**:
-
-* Please submit your report as well as your code.
-* Please submit a zip file (less than 10 MB) that contains one folder named `student_code` which contains all your code files and one `report` in pdf format. You should name your report as `<AndrewID>.pdf`. And please zip all your files into a single file named `<AndrewID>.zip`. 
-* At the beginning of the report, please include a section which lists all the commands for TAs to run your code.
-* You should also mention any collaborators or other sources used for different parts of the assignment.
-* The submission link for homework 3 is provided above. Please use your andrew email for the submission.
-
 ## Software setup
 
-We will use the following python libraries for the homework:
+We will use the following python libraries:
 
 1. PyTorch
-1. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
-1. Any other standard libraries you wish to use (numpy, scipy, PIL, etc). If you're unsure whether a library is allowed, please ask.
+2. VQA Python API (https://github.com/GT-Vision-Lab/VQA)
 
-Please use Python 3. The VQA API is in Python 2.7; for convenience we have provided a version that has been
-converted to work with Python 3. 
+Based on Python 3. The VQA API is in Python 2.7; for convenience a version that has been converted to work with Python 3 has been provided. 
 
-Everything you are asked to implement is in the folder student_code. What is already provided there is intended as a launching point for
-your implementation. Feel free to add arguments, restructure, etc.
-
-## Task 1: Data Loader (30 points)
+## Data Loader 
 In this task you will write a dataset loader for VQA (1.0 Real Images, Open-Ended). You should look over the 
 original VQA paper[1] to get an idea for this dataset and the task you're about to do.
 
@@ -78,12 +45,7 @@ validation data: https://visualqa.org/vqa_v1_download.html
 1. You'll need at least 20 GB of space. If you're using AWS Volumes I suggest getting a volume with at least 50 GB for caching (more details in Task 3 below).
 1. We're using VQA v1.0 Open-Ended for easy comparison to the baseline papers. Feel free to experiment with, for example, VQA 2.0 [4] if you feel inclined, though it is not required. 
 
-
-### Deliverables
-1. Your response to Q1.
-1. A vqa_dataset.py that passes unit tests.
-
-## Task 2: Simple Baseline (30 points)
+## Simple Baseline
 For this task you will implement the simple method described in [2]. This serves to validate your dataset and provide
 a baseline to compare the future tasks against.
 
@@ -118,19 +80,7 @@ for instance to find the parameters they used to avoid needing to do a comprehen
 While Googlenet will be in future version of torchvision.models, as of this writing that has not yet been pushed to release. So, for convenience, 
 googlenet.py has been provided in the external folder.
 
-**Q2** Describe your implementation in brief, focusing on any design decisions you made: e.g what loss and optimizer you used, any training parameters you picked,
-how you computed the ground truth answer, etc. If you make changes from the original paper, describe here what you changed and why. 
-
-
-Aim for a validation accuracy of 50%, though anything over 40% is okay.
-
-### Deliverables
-1. Your response to Q2.
-1. Implementations in experiment_runner_base.py, simple_baseline_experiment_runner.py, simple_baseline_net.py
-1. Graphs of loss and accuracy during training.
-
-
-## Task 3: Co-Attention Network (30 points)
+## Co-Attention Network
 In this task you'll implement [3]. This paper introduces three things not used in the Simple Baseline paper: hierarchical question processing, attention, and 
 the use of recurrent layers. You may choose to do either parallel or alternating co-attention (or both, if you're feeling inspired).
 
@@ -160,33 +110,6 @@ slowly build up the network while making sure that training is still proceeding 
 the pretrained network's (e.g ResNet) encodings of your images and cache them, and then load those instead of the full images. This reduces the amount of 
 data you need to pull into memory, and greatly increases the size of batches you can run.
     1. This is why we recommended you create a larger AWS Volume, so you have a convenient place to store this cache.
-
-Once again feel free to refer to the official Torch implementation: https://github.com/jiasenlu/HieCoAttenVQA
-
-**Q3** As in the above sections, describe your implementation in brief, e.g loss, optimizer, any decisions you made just to speed up training, etc.
- If you make changes from the original paper, describe here what you changed and why. 
-
-
-### Deliverables
-1. Your response to Q3.
-1. Implementations in coattention_experiment_runner.py, coattention_net.py
-1. Graphs of loss and accuracy during training.
-
-
-## Task 4: Custom Network  (10 points + 10 bonus points)
-Brainstorm some ideas for improvements to existing methods or novel ways to approach the problem. 
-
-For 10 extra points, pick at least one method and try it out. It's okay if it doesn't beat the baselines, we're looking for 
-creativity here; not all interesting ideas work out. 
-
-### Deliverables
-1. A list of a few ideas (at least 3, the more the better).
-
-For 10 bonus points:
-
-1. Code implementing at least one of the ideas.
-    1. If you tweak one of your existing implementations, please copy the network to a new, clearly named file before changing it.
-1. Training loss and test accuracy graphs for your idea. 
 
 
 ## Relevant papers:
